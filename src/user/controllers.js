@@ -48,19 +48,19 @@ exports.listUser = async (req, res) => {
 // R - Read
 // FindAll Users - request, response
 exports.findAll = async (req, res) => {
-    // This this - because im a sensible developer
+    
     try {
       // find User object in body
     const users = await User.find(req.body);
       // If User is in db
     if (!users) {
-        // Throw this at ya
+        
         throw new Error("User not found");
         //  else send the user responce
     } else {
         res.send({ users });
     }
-      // sensible developer
+      // 
     } catch (error) {
     console.log(error);
     res.send({ error });
@@ -69,7 +69,7 @@ exports.findAll = async (req, res) => {
 
   // R - findUser - one user {parameters}
 exports.findUser = async (req, res) => {
-    // try this - sensible developer
+    // 
     try {
       // a const dev var findOne({ parameters })
     const users = await User.findOne({ username: req.params.username });
@@ -81,7 +81,7 @@ exports.findUser = async (req, res) => {
     } else {
         res.send({ users });
     }
-      //  Sensible dev
+      
     } catch (error) {
     console.log(error);
     res.send({ error });
@@ -97,9 +97,9 @@ exports.updateUser = async (req, res) => {
         req.body.filterObj,
         req.body.updateObj
     );
-      // rsen user objecj as response
+      
     res.send({ user: userEdits });
-      //  catch ...
+      
     } catch (error) {
     console.log(error);
     res.send({ error });
@@ -108,13 +108,13 @@ exports.updateUser = async (req, res) => {
 
   // D - Delete a User, request, response
 exports.deleteUser = async (req, res) => {
-    // trey ...
+    
     try {
       // const dev var delete one metjod with parameters {userObj}
     const removeUser = await User.deleteOne({ username: req.params.username });
       // send userObject as response
     res.send({ user: removeUser });
-      //  catch err sensible dev etc etc
+      
     } catch (error) {
     console.log(error);
     res.send({ error });
