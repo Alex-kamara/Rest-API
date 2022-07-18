@@ -19,11 +19,11 @@ exports.login = async (req, res) => {
         //     username: req.body.username,
         //     password: req.body.password,
         // });
-        console.log("In login" + req.user);
         if (!req.user) {
             throw new Error("Incorrect credentials");
         } else {
-            res.send({ user: req.user });
+            const token = jwt.sign({ id: req.user._id }, process.env.SECRET);
+          res.send({ user: req.user, token });
         }
     } catch (error) {
         console.log(error);
@@ -45,78 +45,35 @@ exports.listUser = async (req, res) => {
     }
 };
 
-// R - Read
-// FindAll Users - request, response
-exports.findAll = async (req, res) => {
-    
-    try {
-      // find User object in body
-    const users = await User.find(req.body);
-      // If User is in db
-    if (!users) {
-        
-        throw new Error("User not found");
-        //  else send the user responce
-    } else {
-        res.send({ users });
-    }
-      // 
-    } catch (error) {
-    console.log(error);
-    res.send({ error });
-    }
-};
 
-  // R - findUser - one user {parameters}
-exports.findUser = async (req, res) => {
-    // 
-    try {
-      // a const dev var findOne({ parameters })
-    const users = await User.findOne({ username: req.params.username });
-      // if User in not in db
-    if (!users) {
-        // User doesnt match password err
-        throw new Error("Incorrect credentails");
-        // does match send user
-    } else {
-        res.send({ users });
-    }
-      
-    } catch (error) {
-    console.log(error);
-    res.send({ error });
-    }
-};
 
-  // U - Update a users - request, response
 exports.updateUser = async (req, res) => {
-    // try ...
     try {
-      // dev const var userEdit - User object in body and user obect updates
-    const userEdits = await User.updateOne(
+      const result = await User.updateOne(
         req.body.filterObj,
         req.body.updateObj
     );
-      
-    res.send({ user: userEdits });
-      
+      if (result.modifiedCount > 0) {
+        res.status(200).send({ msg: "succesfully updated" });
+      } else {
+        throw new Error({ msg: "Something went wrong" });
+      }
     } catch (error) {
     console.log(error);
     res.send({ error });
     }
 };
 
-  // D - Delete a User, request, response
 exports.deleteUser = async (req, res) => {
-    
-    try {
-      // const dev var delete one metjod with parameters {userObj}
-    const removeUser = await User.deleteOne({ username: req.params.username });
-      // send userObject as response
-    res.send({ user: removeUser });
-      
-    } catch (error) {
+  try {
+    const result = await User.deleteOne({ _id: req.user._id });
+    if (result.deletedCount > 0) {
+      res.send({ msg: "Successfully Deleted" });
+    } else {
+      throw new Error({ msg: "Something went wrong" });
+    }
+  } catch (error) {
     console.log(error);
     res.send({ error });
-    }
+  }
 };
